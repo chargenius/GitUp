@@ -959,7 +959,20 @@ static NSColor* _patternColor = nil;
     if (remoteBranch && ![self.repository.history isCommitOnAnyLocalBranch:commit]) {
       [self deleteRemoteBranch:remoteBranch];
     } else {
-      [self deleteCommit:commit];
+      NSAlert* alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Do you want to delete the commit or the remote branch?", nil)
+                                       defaultButton:NSLocalizedString(@"Delete remote Branch", nil)
+                                     alternateButton:NSLocalizedString(@"Cancel", nil)
+                                         otherButton:NSLocalizedString(@"Delete Commit", nil)
+                           informativeTextWithFormat:NSLocalizedString(@"The selected commit is also the tip of the remote branch \"%@\".", nil), remoteBranch.name];
+      alert.type = kGIAlertType_Note;
+      [self presentAlert:alert
+       completionHandler:^(NSInteger returnCode) {
+         if (returnCode == NSAlertDefaultReturn) {
+           [self deleteRemoteBranch:remoteBranch];
+         } else if (returnCode == NSAlertOtherReturn) {
+           [self deleteCommit:commit];
+         }
+       }];
     }
   }
 }
