@@ -32,6 +32,7 @@
 
 @property(nonatomic, assign) GINode* selectedNode;  // Setting this property directly does not call the delegate
 @property(nonatomic, assign) GCHistoryCommit* selectedCommit;  // Convenience method that wraps @selectedNode
+@property(nonatomic, assign) GINode* lastSelectedNode;
 
 @property(nonatomic, readonly) NSSize minSize;
 

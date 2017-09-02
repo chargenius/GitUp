@@ -671,7 +671,8 @@ static NSColor* _patternColor = nil;
     return (service != kGCHostingService_Unknown);
   }
   if ((item.action == @selector(diffSelectedCommitWithHEAD:)) || (item.action == @selector(externalDiffWithHEAD:))) {
-    return ![self.repository.history.HEADCommit isEqualToCommit:commit];
+    GCHistoryCommit* headCommit = _graphView.lastSelectedNode.commit ?: self.repository.history.HEADCommit;
+    return ![headCommit isEqualToCommit:commit];
   }
 
   if (editingDisabled) {
@@ -813,7 +814,7 @@ static NSColor* _patternColor = nil;
 }
 
 - (void)_diffSelectedCommitWithHEAD:(void (^)(GCHistoryCommit* commit, GCHistoryCommit* otherCommit))handler {
-  GCHistoryCommit* headCommit = self.repository.history.HEADCommit;
+  GCHistoryCommit* headCommit = _graphView.lastSelectedNode.commit ?: self.repository.history.HEADCommit;
   GCHistoryCommit* selectedCommit = _graphView.selectedCommit;
   switch ([selectedCommit.date compare:headCommit.date]) {
     case NSOrderedAscending:  // Selected commit is older than HEAD commit
