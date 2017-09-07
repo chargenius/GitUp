@@ -17,7 +17,6 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-interface-ivars"
 #pragma clang diagnostic pop
-#import <Sparkle/Sparkle.h>
 
 #import <GitUpKit/XLFacilityMacros.h>
 
