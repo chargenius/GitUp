@@ -16,7 +16,6 @@
 #import <Security/Security.h>
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-interface-ivars"
-#import <HockeySDK/HockeySDK.h>
 #pragma clang diagnostic pop
 #import <Sparkle/Sparkle.h>
 
@@ -310,14 +309,6 @@
 - (void)applicationWillFinishLaunching:(NSNotification*)notification {
   // Initialize custom subclass of NSDocumentController
   [DocumentController sharedDocumentController];
-
-#if !DEBUG
-  // Initialize HockeyApp
-  [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"65233b0e034e4fcbaf6754afba3b2b23"];
-  [[BITHockeyManager sharedHockeyManager] setDisableMetricsManager:YES];
-  [[BITHockeyManager sharedHockeyManager] setDisableFeedbackManager:YES];
-  [[BITHockeyManager sharedHockeyManager] startManager];
-#endif
 
   [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self
                                                      andSelector:@selector(_getUrl:withReplyEvent:)
