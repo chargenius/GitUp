@@ -27,5 +27,6 @@ typedef NS_ENUM(unsigned short, GIKeyCode) {
   kGIKeyCode_Home = 0x73,
   kGIKeyCode_End = 0x77,
   kGIKeyCode_Return = 0x24,
+  kGIKeyCode_Space = 0x31,
   kGIKeyCode_Delete = 0x33
 };
