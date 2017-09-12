@@ -280,7 +280,7 @@
 
 - (BOOL)diffFilesViewController:(GIDiffFilesViewController*)controller handleKeyDownEvent:(NSEvent*)event {
   if (!(event.modifierFlags & NSDeviceIndependentModifierFlagsMask)) {
-    if (event.keyCode == kGIKeyCode_Return) {
+    if (event.keyCode == kGIKeyCode_Return || event.keyCode == kGIKeyCode_Space) {
       [self _diffFilesViewControllerDidPressReturn:controller];
       return YES;
     } else if (event.keyCode == kGIKeyCode_Delete) {
@@ -299,12 +299,9 @@
 }
 
 - (void)diffFilesViewController:(GIDiffFilesViewController*)controller didDoubleClickDeltas:(NSArray*)deltas {
-  if (controller == _workdirFilesViewController) {
-    [self _stageSelectedFiles:deltas];
-  } else if (controller == _indexFilesViewController) {
-    [self _unstageSelectedFiles:deltas];
-  } else {
-    XLOG_DEBUG_UNREACHABLE();
+  GCDiffDelta* delta = deltas.firstObject;
+  if (delta) {
+    [self openFileWithDefaultEditor:delta.canonicalPath];
   }
 }
 
@@ -427,7 +424,7 @@
 
 - (BOOL)diffContentsViewController:(GIDiffContentsViewController*)controller handleKeyDownEvent:(NSEvent*)event {
   if (!(event.modifierFlags & NSDeviceIndependentModifierFlagsMask)) {
-    if (event.keyCode == kGIKeyCode_Return) {
+    if (event.keyCode == kGIKeyCode_Return || event.keyCode == kGIKeyCode_Space) {
       [self _diffContentsViewControllerDidPressReturn:controller];
       return YES;
     } else if (event.keyCode == kGIKeyCode_Delete) {
