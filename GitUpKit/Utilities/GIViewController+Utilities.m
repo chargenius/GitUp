@@ -286,7 +286,10 @@ static NSString* _diffTemporaryDirectoryPath = nil;
 }
 
 - (void)openFileWithDefaultEditor:(NSString*)path {
-  [[NSWorkspace sharedWorkspace] openFile:[self.repository absolutePathForFile:path]];  // This will silently fail if the file doesn't exist in the working directory
+  NSTask *task = [[NSTask alloc] init];
+  [task setLaunchPath:@"/usr/bin/open"];
+  [task setArguments:@[[self.repository absolutePathForFile:path]]];
+  [task launch];
 }
 
 - (void)showFileInFinder:(NSString*)path {
