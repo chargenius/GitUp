@@ -43,7 +43,7 @@
 - (void)setShowsTagField:(BOOL)flag;
 @end
 
-@interface AppDelegate () <NSUserNotificationCenterDelegate, SUUpdaterDelegate>
+@interface AppDelegate () <NSUserNotificationCenterDelegate>
 - (IBAction)closeWelcomeWindow:(id)sender;
 @end
 
@@ -73,9 +73,6 @@
 @end
 
 @implementation AppDelegate {
-  SUUpdater* _updater;
-  BOOL _updatePending;
-  BOOL _manualCheck;
   NSInteger _allowWelcome;
   CGFloat _welcomeMaxHeight;
 
@@ -333,20 +330,6 @@
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
-#if !DEBUG
-  // Initialize Sparkle and check for update immediately
-  if (![[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKey_DisableSparkle]) {
-    _updater = [SUUpdater sharedUpdater];
-    _updater.delegate = self;
-    _updater.automaticallyChecksForUpdates = NO;
-    _updater.sendsSystemProfile = NO;
-    _updater.automaticallyDownloadsUpdates = YES;
-
-    _manualCheck = NO;
-    [_updater checkForUpdatesInBackground];
-  }
-#endif
-
   // Initialize user notification center
   [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 
@@ -493,7 +476,7 @@ static CFDataRef _MessagePortCallBack(CFMessagePortRef local, SInt32 msgid, CFDa
 
 - (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)anItem {
   if (anItem.action == @selector(checkForUpdates:)) {
-    return _updater && !_updatePending && ![_updater updateInProgress];
+    return NO;
   }
   return YES;
 }
@@ -507,9 +490,6 @@ static CFDataRef _MessagePortCallBack(CFMessagePortRef local, SInt32 msgid, CFDa
   NSString* newChannel = _channelPopUpButton.selectedItem.representedObject;
   if (![newChannel isEqualToString:oldChannel]) {
     [[NSUserDefaults standardUserDefaults] setObject:newChannel forKey:kUserDefaultsKey_ReleaseChannel];
-
-    _manualCheck = NO;
-    [_updater checkForUpdatesInBackground];
   }
 }
 
@@ -529,11 +509,7 @@ static CFDataRef _MessagePortCallBack(CFMessagePortRef local, SInt32 msgid, CFDa
 #if DEBUG
   _versionTextField.stringValue = @"DEBUG";
 #else
-  if (_updatePending) {
-    _versionTextField.stringValue = NSLocalizedString(@"Update Pending", nil);
-  } else {
-    _versionTextField.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Version %@ (%@)", nil), [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
-  }
+  _versionTextField.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Version %@ (%@)", nil), [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
 #endif
   _copyrightTextField.stringValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSHumanReadableCopyright"];
   [_aboutPanel makeKeyAndOrderFront:nil];
@@ -637,8 +613,6 @@ static CFDataRef _MessagePortCallBack(CFMessagePortRef local, SInt32 msgid, CFDa
 }
 
 - (IBAction)checkForUpdates:(id)sender {
-  _manualCheck = YES;
-  [_updater checkForUpdatesInBackground];
 }
 
 - (IBAction)closeWelcomeWindow:(id)sender {
@@ -751,60 +725,6 @@ static CFDataRef _MessagePortCallBack(CFMessagePortRef local, SInt32 msgid, CFDa
   _authenticationURL = nil;
   _authenticationUsername = nil;
   _authenticationPassword = nil;
-}
-
-#pragma mark - SUUpdaterDelegate
-
-- (NSString*)feedURLStringForUpdater:(SUUpdater*)updater {
-  NSString* channel = [[NSUserDefaults standardUserDefaults] stringForKey:kUserDefaultsKey_ReleaseChannel];
-  return [NSString stringWithFormat:kURL_AppCast, channel];
-}
-
-- (void)updater:(SUUpdater*)updater didFindValidUpdate:(SUAppcastItem*)item {
-  NSString* channel = [[NSUserDefaults standardUserDefaults] stringForKey:kUserDefaultsKey_ReleaseChannel];
-  XLOG_INFO(@"Did find app update on channel '%@' for version %@", channel, item.versionString);
-  if (_manualCheck) {
-    NSAlert* alert = [NSAlert alertWithMessageText:NSLocalizedString(@"A GitUp update is available!", nil)
-                                     defaultButton:NSLocalizedString(@"OK", nil)
-                                   alternateButton:nil
-                                       otherButton:nil
-                         informativeTextWithFormat:NSLocalizedString(@"The update will download automatically in the background and be installed when you quit GitUp.", nil)];
-    alert.type = kGIAlertType_Note;
-    [alert runModal];
-  }
-}
-
-- (void)updaterDidNotFindUpdate:(SUUpdater*)updater {
-  NSString* channel = [[NSUserDefaults standardUserDefaults] stringForKey:kUserDefaultsKey_ReleaseChannel];
-  XLOG_VERBOSE(@"App is up-to-date at version %@ on channel '%@'", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], channel);
-  if (_manualCheck) {
-    NSAlert* alert = [NSAlert alertWithMessageText:NSLocalizedString(@"GitUp is already up-to-date!", nil)
-                                     defaultButton:NSLocalizedString(@"OK", nil)
-                                   alternateButton:nil
-                                       otherButton:nil
-                         informativeTextWithFormat:@""];
-    alert.type = kGIAlertType_Note;
-    [alert runModal];
-  }
-}
-
-- (void)updater:(SUUpdater*)updater didAbortWithError:(NSError*)error {
-  NSString* channel = [[NSUserDefaults standardUserDefaults] stringForKey:kUserDefaultsKey_ReleaseChannel];
-  if (![error.domain isEqualToString:SUSparkleErrorDomain] || (error.code != SUNoUpdateError)) {
-    XLOG_ERROR(@"App update on channel '%@' aborted: %@", channel, error);
-  }
-}
-
-- (void)updater:(SUUpdater*)updater willInstallUpdate:(SUAppcastItem*)item {
-  XLOG_INFO(@"Installing app update for version %@", item.versionString);
-}
-
-- (void)updater:(SUUpdater*)updater willInstallUpdateOnQuit:(SUAppcastItem*)item immediateInstallationInvocation:(NSInvocation*)invocation {
-  XLOG_INFO(@"Will install app update for version %@ on quit", item.versionString);
-  _updatePending = YES;
-  [self _showNotificationWithTitle:NSLocalizedString(@"Update Available", nil)
-                            action:NULL
-                           message:NSLocalizedString(@"Relaunch GitUp to update to version %@ (%@).", nil), item.displayVersionString, item.versionString];
 }
 
 @end
