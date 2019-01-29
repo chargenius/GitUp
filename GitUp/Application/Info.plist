@@ -52,5 +52,7 @@
 	<string>NSApplication</string>
 	<key>NSRequiresAquaSystemAppearance</key>
 	<true/>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Open Terminal</string>
 </dict>
 </plist>
