@@ -76,9 +76,12 @@
 - (instancetype)initWithRepository:(GCLiveRepository*)repository {
   if ((self = [super initWithRepository:repository])) {
     _showsVirtualTips = ![[self.repository userInfoForKey:kPersistentViewStateKey_HideVirtualTips] boolValue];
-    _hidesTagTips = ![[self.repository userInfoForKey:kPersistentViewStateKey_ShowTagTips] boolValue];
-    _hidesRemoteBranchTips = ![[self.repository userInfoForKey:kPersistentViewStateKey_ShowRemoteBranchTips] boolValue];
-    _hidesStaleBranchTips = ![[self.repository userInfoForKey:kPersistentViewStateKey_ShowStaleBranchTips] boolValue];
+    NSNumber *result = [self.repository userInfoForKey:kPersistentViewStateKey_ShowTagTips];
+    _hidesTagTips = result ? ![result boolValue] : NO;
+    result = [self.repository userInfoForKey:kPersistentViewStateKey_ShowRemoteBranchTips];
+    _hidesRemoteBranchTips = result ? ![result boolValue] : NO;
+    result = [self.repository userInfoForKey:kPersistentViewStateKey_ShowStaleBranchTips];
+    _hidesStaleBranchTips = result ? ![result boolValue] : NO;
   }
   return self;
 }
