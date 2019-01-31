@@ -296,7 +296,7 @@ Adjust settings in Show menu</string>
                 <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="dry-dR-hSD">
                     <rect key="frame" x="363" y="23" width="274" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Remote operation in progress - Please wait…" id="vXh-uB-Jji">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="Remote operation in progress - Please wait…" id="vXh-uB-Jji">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

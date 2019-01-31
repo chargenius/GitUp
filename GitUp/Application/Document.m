@@ -1200,6 +1200,7 @@ static NSString* _StringFromRepositoryState(GCRepositoryState state) {
 
   _infoTextField1.hidden = YES;
   _infoTextField2.hidden = YES;
+  [_progressTextField setStringValue:[NSString stringWithFormat:@"%@ transferring with remote...", repository.workingDirectoryPath.lastPathComponent]];
   _progressTextField.hidden = NO;
   _progressIndicator.minValue = 0.0;
   _progressIndicator.maxValue = 1.0;
