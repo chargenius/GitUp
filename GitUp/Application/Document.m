@@ -277,15 +277,17 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   style.alignment = NSCenterTextAlignment;
   _stateAttributes = @{NSParagraphStyleAttributeName : style, NSForegroundColorAttributeName : [NSColor redColor], NSFontAttributeName : [NSFont boldSystemFontOfSize:fontSize]};
 
-  NSString* frameString = [_repository userInfoForKey:kRepositoryUserInfoKey_MainWindowFrame];
-  if (frameString) {
-    [_mainWindow setFrameFromString:frameString];
-  }
   _mainWindow.backgroundColor = [NSColor whiteColor];
   [_mainWindow setToolbar:_toolbar];
   if (_unifiedToolbar) {
     [_mainWindow setTitleVisibility:NSWindowTitleHidden];
   }
+  
+  NSString* frameString = [_repository userInfoForKey:kRepositoryUserInfoKey_MainWindowFrame];
+  if (frameString) {
+    [_mainWindow setFrameFromString:frameString];
+  }
+  
   _contentView.wantsLayer = YES;
   _leftView.wantsLayer = YES;
   _titleView.wantsLayer = YES;
