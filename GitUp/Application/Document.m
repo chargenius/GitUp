@@ -476,7 +476,8 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   NSUInteger totalCount = _repository.history.allCommits.count;
   __block float lastProgress = 0.0;
   __block CFTimeInterval lastTime = 0.0;
-  [_repository prepareSearchInBackground:[[_repository userInfoForKey:kRepositoryUserInfoKey_IndexDiffs] boolValue]
+  NSNumber *indexDiffs = [_repository userInfoForKey:kRepositoryUserInfoKey_IndexDiffs];
+  [_repository prepareSearchInBackground:indexDiffs ? [indexDiffs boolValue] : YES
       withProgressHandler:^BOOL(BOOL firstUpdate, NSUInteger addedCommits, NSUInteger removedCommits) {
         if (firstUpdate) {
           float progress = MIN(roundf(1000 * (float)addedCommits / (float)totalCount) / 10, 100.0);
@@ -1974,7 +1975,8 @@ static NSString* _StringFromRepositoryState(GCRepositoryState state) {
 }
 
 - (IBAction)editSettings:(id)sender {
-  _indexDiffsButton.state = [[_repository userInfoForKey:kRepositoryUserInfoKey_IndexDiffs] boolValue];
+  NSNumber *indexDiffs = [_repository userInfoForKey:kRepositoryUserInfoKey_IndexDiffs];
+  _indexDiffsButton.state = indexDiffs ? [indexDiffs boolValue] : YES;
 
   [NSApp beginSheet:_settingsWindow modalForWindow:_mainWindow modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
