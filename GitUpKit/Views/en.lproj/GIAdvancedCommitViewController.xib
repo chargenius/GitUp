@@ -86,7 +86,6 @@
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                         <string key="keyEquivalent">d</string>
-                                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                                                                     </buttonCell>
                                                                     <connections>
                                                                         <action selector="discardAll:" target="-2" id="yfG-b0-hpM"/>
