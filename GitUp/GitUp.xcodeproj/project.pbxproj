@@ -383,11 +383,10 @@
 				TargetAttributes = {
 					E21DCAE71B253847006424E8 = {
 						CreatedOnToolsVersion = 6.3.2;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					E2C338AA19F8562F00063D95 = {
 						CreatedOnToolsVersion = 6.1;
-						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -613,6 +612,9 @@
 		E21DCAEC1B253847006424E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8TH5P6QWBR;
 				HEADER_SEARCH_PATHS = "../GitUpKit/Third-Party/libgit2/include";
 				OTHER_LDFLAGS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)/libgit2.a",
@@ -620,6 +622,7 @@
 					"../GitUpKit/Third-Party/libssh2/$(GITUP_PLATFORM)/lib/libssh2.a",
 				);
 				PRODUCT_NAME = gitup;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -627,6 +630,9 @@
 		E21DCAED1B253847006424E8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8TH5P6QWBR;
 				HEADER_SEARCH_PATHS = "../GitUpKit/Third-Party/libgit2/include";
 				OTHER_LDFLAGS = (
 					"$(BUILD_DIR)/$(CONFIGURATION)/libgit2.a",
@@ -634,6 +640,7 @@
 					"../GitUpKit/Third-Party/libssh2/$(GITUP_PLATFORM)/lib/libssh2.a",
 				);
 				PRODUCT_NAME = gitup;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -661,6 +668,8 @@
 				BUNDLE_VERSION = 0;
 				BUNDLE_VERSION_STRING = 1.1;
 				CODE_SIGN_ENTITLEMENTS = Application/GitUp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = 8TH5P6QWBR;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Third-Party";
 				INFOPLIST_FILE = Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -677,12 +686,16 @@
 				BUNDLE_VERSION = 0;
 				BUNDLE_VERSION_STRING = 1.1;
 				CODE_SIGN_ENTITLEMENTS = Application/GitUp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8TH5P6QWBR;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Third-Party";
 				INFOPLIST_FILE = Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MARKETING_VERSION = 1.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = co.gitup.mac;
 				PRODUCT_NAME = GitUp;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
